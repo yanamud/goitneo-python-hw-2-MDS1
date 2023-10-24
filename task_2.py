@@ -7,102 +7,69 @@ class Field:
     def __str__(self):
         return str(self.value)
 
-
 class Name(Field):
-    ...
-    # def __init__(self, name):
-    #     self.name = name
-
+    def __init__(self, value):
+        super().__init__(value)
 
 class Phone(Field):
     def __init__(self, value):
         if not all((len(value) == 10, value.isdigit())):
             raise ValueError("The number should contain 10 digits") 
         super().__init__(value)
-    # def check_phone(self, phone):
-    #     if len(phone) != 10:
-    #         return 
-    #     else:
-    #         self.phone = phone
-
 
 class Record:
-
     def __init__(self, name, phone=None):
         self.name = Name(name)
         self.phones = [phone] if phone else []
 
     def add_phone(self, phone):
-        # phone = Phone(phone)
         self.phones.append(Phone(phone))
         return f"Phone number {phone} add success to contact {self.name}"
 
     def remove_phone(self, phone):
-        # self.phone = Phone(phone)
-
-        # for k, v in AddressBook.items():
         for p in self.phones:
             if p.value == phone:
                 del self.phones[self.phones.index(p)]
-            # if v == self.phone:  
-            #     AddressBook[k] = []
-            return 'the phone was emoved'
+            return 'the phone was removed'
         else:
             return "The entered phone was not found"
 
     def edit_phone(self, old_phone,new_phone):
-        ...
-        # self.old_phone = old_phone
-        # self.new_phone = new_phone
-
-        # result = AddressBook.find.name
-
-        # for k, v in AddressBook.items():
-        #     if v == old_phone and k == result:  
-        #         AddressBook[k] = new_phone
-        #     return 'the phone was updated'
-        # else:
-        #     return "The entered phone was not found"
+        for p in self.phones:
+            if p.value == old_phone:
+                self.phones.insert(self.phones.index(p)+1,Phone(new_phone))
+                del self.phones[self.phones.index(p)]
+            return 'the phone was changed'
+        else:
+            return "The entered phone was not found"
                
     def find_phone(self, found_phone):
-        ...
-        # found_phone = Phone.check_phone
-        # if found_phone in AddressBook.keys():
-        #     return found_phone
-        # else:
-        #     return "The entered name was not found"
+        for p in self.phones:
+            if p.value == found_phone:
+                return found_phone
 
     def __str__(self):
        return f"Contact name: {self.name}, phones: {'; '.join(p.value for p in self.phones)}"
 
-
 class AddressBook(UserDict):
-
     def add_record(self, record: Record):
         self.data[record.name.value] = record
-        # key = Record(self.name)
-        # self.phone = Record.add_phone(phone)
-  
-        # AddressBook[key] = self.phone
-        # return AddressBook
     
     def find(self, name):
-        # self.name = name
         if name in self.data:
             return self.data[name]
         else:
             return "The entered name was not found"
 
     def delete(self, name):
-        # self.name = name
         if name in self.data:
             del self.data[name]
             return "The record was removed"
         else:
             return "The entered name was not found"
-
        
 if __name__ == '__main__':
+
     # Створення нової адресної книги
     book = AddressBook()
 
@@ -116,7 +83,7 @@ if __name__ == '__main__':
 
     # Створення та додавання нового запису для Jane
     jane_record = Record("Jane")
-    jane_record.add_phone("9876543217")
+    jane_record.add_phone("9876543210")
     book.add_record(jane_record)
 
     # Виведення всіх записів у книзі
@@ -135,3 +102,7 @@ if __name__ == '__main__':
 
     # Видалення запису Jane
     book.delete("Jane")
+    
+    # Виведення всіх записів у книзі
+    for name, record in book.data.items():
+        print(record)
